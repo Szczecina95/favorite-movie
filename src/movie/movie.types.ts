@@ -15,4 +15,4 @@ export interface MoviesData {
     movies: Movie[]
 }  
 
-export type Genres = "Action" | "Comedy" | "Drama" | "Horror" | "Sci-Fi";
+export type Genres = "Action" | "Comedy" | "Drama" | "Horror" | "Sci-Fi" | 'Romance' | 'Animation' | 'Biography' | 'Crime' |  'Adventure' | 'Fantasy' | 'Musical';

@@ -32,6 +32,9 @@ export class MovieService {
         if(duration && !genres){
             return this.getRandomMovieByDuration(duration)
         }
+        if(!duration && genres){ 
+            return this.filterAndSortMoviesByGenres(genres)
+        }
 
         return movies[getRandomMovieIndex(movies)];
     }

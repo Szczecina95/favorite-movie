@@ -3,7 +3,8 @@ import { Genres, Movie } from '../movie.types';
 
 export class CreateMovieDTO implements Omit<Movie, 'id'> {
     @IsArray({ message: 'Genres must be an array of predefined strings.' })
-    @IsIn(["Action", "Comedy", "Drama", "Horror", "Sci-Fi"], { each: true, message: 'Invalid genre selected.' })
+    @IsIn(["Action", "Comedy", "Drama", "Horror", "Sci-Fi", 'Romance', 'Animation', 'Biography', 'Crime', 'Adventure', 'Fantasy', 'Musical'], 
+      { each: true, message: 'Invalid genre selected.' })
     @IsNotEmpty({ message: 'Genres are required.' })
     genres!: Genres[];
   
