@@ -3,7 +3,6 @@ import moviesData from '../db/db.json'
 import { CreateMovieDTO } from './dto/create-movie.dto';
 import { Genres, MoviesData } from './movie.types'
 import path from 'path'
-import { getRandomMovieIndex, getLastMovieId } from './movie.helpers';
 import { Movie } from './movie.types';
 
 export class MovieService {
@@ -14,7 +13,7 @@ export class MovieService {
 
     addMovieToDb(movie: CreateMovieDTO): void {
         const { movies } = this.data
-        const id = getLastMovieId(movies) === undefined ? 1 : getLastMovieId(movies) + 1;
+        const id = this.getLastMovieId(movies) === undefined ? 1 : this.getLastMovieId(movies) + 1;
         const movieToAdd = { id, ...movie }
         movies.push(movieToAdd)
 
@@ -36,23 +35,23 @@ export class MovieService {
             return this.filterAndSortMoviesByGenres(genres)
         }
 
-        return movies[getRandomMovieIndex(movies)];
+        return movies[this.getRandomMovieIndex(movies)];
     }
 
-    private filterMoviesByDuration (movies: Movie[], duration: number) {
+    private filterMoviesByDuration (movies: Movie[], duration: number): Movie[] {
         const minDuration = duration >= 10 ? duration - 10 : duration
         const maxDuration = duration + 10
         return movies.filter((movie) => Number(movie.runtime) >= minDuration && Number(movie.runtime) <= maxDuration)
     }
 
-    private getRandomMovieByDuration(duration: number) {
+    private getRandomMovieByDuration(duration: number): Movie {
         const { movies } = this.data
         const filteredMoviesByRuration = this.filterMoviesByDuration(movies, duration)
-        const randomNumberFromFilteredMovies = getRandomMovieIndex(filteredMoviesByRuration)
+        const randomNumberFromFilteredMovies = this.getRandomMovieIndex(filteredMoviesByRuration)
         return filteredMoviesByRuration[randomNumberFromFilteredMovies]
     }
 
-    private filterAndSortMoviesByGenres(genres: Genres[]) {
+    private filterAndSortMoviesByGenres(genres: Genres[]): Movie[] {
         const { movies } = this.data
         const filteredMovies = movies.filter(movie =>
             genres.some(genre => movie.genres.includes(genre))
@@ -62,8 +61,15 @@ export class MovieService {
             genres.filter(genre => b.genres.includes(genre)).length -
             genres.filter(genre => a.genres.includes(genre)).length
         );
-
         return sortedMovies
+    }
+
+    private getLastMovieId(movies: Movie[]): number {
+        return movies[movies.length - 1].id;
+    }
+    
+    private getRandomMovieIndex (movies: Movie[]): number {
+        return Math.floor(Math.random() * (movies.length - 1)) + 1
     }
 }
 
