@@ -29,7 +29,6 @@ export class MovieService {
         const duration = 150
         const genres = null
 
-        const x = this.filterAndSortMoviesByGenres(['Action','Comedy','Drama', 'Sci-Fi'])
         if(duration && !genres){
             return this.getRandomMovieByDuration(duration)
         }
