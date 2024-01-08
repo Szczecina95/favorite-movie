@@ -2,7 +2,6 @@ import { validate } from "class-validator";
 import { CreateMovieDTO } from "./dto/create-movie.dto";
 import { MovieService } from "./movie.service";
 import { Request, Response } from 'express';
-import { Genres } from "./movie.types";
 
 const movieService = new MovieService();
 
@@ -29,13 +28,13 @@ export class MovieController {
             res.status(201).json({ message: 'Movie added successfully' });
         } catch (error) {
             console.error('Error adding movie:', error);
-            res.status(404).json({ error: 'Bad request' });
+            res.status(400).json({ error: 'Bad request' });
         }
     }
 
     getMovies(req: Request, res: Response) {
-        const genres: string = req.query.genres as string;
-        const duration: number = parseInt(req.query.duration as string, 10)
+        const genres: string = <string>req.query.genres
+        const duration: number = parseInt(<string>req.query.duration, 10)
         const movies = movieService.getMovies(genres, duration);
         res.status(200).send(movies)
     }

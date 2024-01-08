@@ -8,7 +8,7 @@ import { Movie } from './movie.types';
 export class MovieService {
     public data: MoviesData
     constructor () {
-        this.data = moviesData as MoviesData
+        this.data = <MoviesData>moviesData
     }
 
     addMovieToDb(movie: CreateMovieDTO): void {
@@ -23,9 +23,9 @@ export class MovieService {
       }
     })}
 
-    getMovies(genres: string, duration: number): Movie | Movie[] {
+    getMovies(genres?: string, duration?: number): Movie | Movie[] {
         const { movies } = this.data
-        const formatedGenres = genres?.trim().split(',') as Genres[];
+        const formatedGenres = <Genres[]>genres?.trim().split(',');
 
         if(duration && !genres){
             return this.getRandomMovieByDuration(duration)

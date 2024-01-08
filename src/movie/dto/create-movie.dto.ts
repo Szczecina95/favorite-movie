@@ -29,14 +29,14 @@ export class CreateMovieDTO implements Omit<Movie, 'id'> {
   
     @IsOptional()
     @IsString({ message: 'Actors must be a string.' })
-    actors!: string;
+    actors?: string;
   
     @IsOptional()
     @IsString({ message: 'Plot must be a string.' })
-    plot!: string;
+    plot?: string;
   
     @IsOptional()
     @IsString({ message: 'Poster URL must be a string.' })
-    posterUrl!: string;
+    posterUrl?: string;
   }
   
