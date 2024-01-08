@@ -23,16 +23,19 @@ export class MovieService {
       }
     })}
 
-    getMovies(): Movie | Movie[] {
+    getMovies(genres: string, duration: number): Movie | Movie[] {
         const { movies } = this.data
-        const duration = 150
-        const genres = null
+        const formatedGenres = genres?.trim().split(',') as Genres[];
 
         if(duration && !genres){
             return this.getRandomMovieByDuration(duration)
         }
         if(!duration && genres){ 
-            return this.filterAndSortMoviesByGenres(genres)
+            return this.filterAndSortMoviesByGenres(formatedGenres)
+        }
+
+        if (duration && genres) {
+            return this.filterMoviesByGenresAndDuration(formatedGenres, duration);
         }
 
         return movies[this.getRandomMovieIndex(movies)];
@@ -62,6 +65,15 @@ export class MovieService {
             genres.filter(genre => a.genres.includes(genre)).length
         );
         return sortedMovies
+    }
+
+    private filterMoviesByGenresAndDuration(genres: Genres[], duration: number): Movie[] {
+        const { movies } = this.data;
+    
+        const filteredMoviesByGenres = this.filterAndSortMoviesByGenres(genres);
+        const filteredMoviesByDuration = this.filterMoviesByDuration(movies, duration);
+    
+        return filteredMoviesByGenres.filter(movie => filteredMoviesByDuration.includes(movie));
     }
 
     private getLastMovieId(movies: Movie[]): number {

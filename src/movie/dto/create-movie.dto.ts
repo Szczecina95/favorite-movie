@@ -1,10 +1,10 @@
-import { IsArray, IsString, IsNumber, IsOptional, MaxLength, IsIn, IsNotEmpty, Max } from 'class-validator';
+import { IsArray, IsString, IsOptional, MaxLength, IsIn, IsNotEmpty, Max } from 'class-validator';
 import { Genres, Movie } from '../movie.types';
+import moviesData from '../../db/db.json'
 
 export class CreateMovieDTO implements Omit<Movie, 'id'> {
     @IsArray({ message: 'Genres must be an array of predefined strings.' })
-    @IsIn(["Action", "Comedy", "Drama", "Horror", "Sci-Fi", 'Romance', 'Animation', 'Biography', 'Crime', 'Adventure', 'Fantasy', 'Musical'], 
-      { each: true, message: 'Invalid genre selected.' })
+    @IsIn(moviesData.genres, { each: true, message: 'Invalid genre selected.' })
     @IsNotEmpty({ message: 'Genres are required.' })
     genres!: Genres[];
   

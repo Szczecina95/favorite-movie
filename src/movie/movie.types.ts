@@ -4,7 +4,7 @@ export interface Movie {
     year: string
     runtime: string
     genres: Genres[]
-    director?: string
+    director: string
     actors?: string
     plot?: string
     posterUrl?: string
@@ -15,4 +15,25 @@ export interface MoviesData {
     movies: Movie[]
 }  
 
-export type Genres = "Action" | "Comedy" | "Drama" | "Horror" | "Sci-Fi" | 'Romance' | 'Animation' | 'Biography' | 'Crime' |  'Adventure' | 'Fantasy' | 'Musical';
+export type Genres = 
+  "Comedy" |
+  "Fantasy" |
+  "Crime" |
+  "Drama" |
+  "Music" |
+  "Adventure" |
+  "History" |
+  "Thriller" |
+  "Animation" |
+  "Family" |
+  "Mystery" |
+  "Biography" |
+  "Action" |
+  "Film-Noir" |
+  "Romance" |
+  "Sci-Fi" |
+  "War" |
+  "Western" |
+  "Horror" |
+  "Musical" |
+  "Sport";

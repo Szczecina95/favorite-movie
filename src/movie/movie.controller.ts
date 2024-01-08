@@ -2,6 +2,7 @@ import { validate } from "class-validator";
 import { CreateMovieDTO } from "./dto/create-movie.dto";
 import { MovieService } from "./movie.service";
 import { Request, Response } from 'express';
+import { Genres } from "./movie.types";
 
 const movieService = new MovieService();
 
@@ -33,7 +34,9 @@ export class MovieController {
     }
 
     getMovies(req: Request, res: Response) {
-        const movies = movieService.getMovies();
+        const genres: string = req.query.genres as string;
+        const duration: number = parseInt(req.query.duration as string, 10)
+        const movies = movieService.getMovies(genres, duration);
         res.status(200).send(movies)
     }
 }
