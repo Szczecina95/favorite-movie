@@ -2,6 +2,11 @@ import { validate } from "class-validator";
 import { CreateMovieDTO } from "./dto/create-movie.dto";
 import { MovieService } from "./movie.service";
 import { Request, Response } from 'express';
+import { Genres } from "./movie.types";
+import moviesData from '../db/db.json'
+import { areGenresValid } from "./movie.helpers";
+import { error } from "console";
+
 
 const movieService = new MovieService();
 
@@ -20,8 +25,10 @@ export class MovieController {
 
             const errors = await validate(movie);
 
+            console.log(errors)
             if (errors.length) {
                 res.send(errors)
+                return;
             }
 
             movieService.addMovieToDb(movie);
@@ -33,9 +40,15 @@ export class MovieController {
     }
 
     getMovies(req: Request, res: Response) {
-        const genres: string = <string>req.query.genres
+        const genres: string = <string>req.query?.genres
         const duration: number = parseInt(<string>req.query.duration, 10)
-        const movies = movieService.getMovies(genres, duration);
+        const formatedGenres = <Genres[]>genres?.trim().split(',')
+
+        if(genres && !areGenresValid(formatedGenres, <Genres[]>moviesData.genres)){
+            res.status(400).json({ error: 'At least one of the genres is incorrect'})
+        }
+
+        const movies = movieService.getMovies(formatedGenres, duration);
         res.status(200).send(movies)
     }
 }

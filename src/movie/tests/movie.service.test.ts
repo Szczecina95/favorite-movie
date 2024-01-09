@@ -41,20 +41,18 @@ describe('MovieService', () => {
   });
 
   it('should filter and sort movies by genres if only genres are specified', () => {
-    const genres = 'Action';
+    const genres = ['Action'] as Genres[];
     const result = movieService.getMovies(genres, undefined) as Movie[];
-    const filteredGenres = genres.trim().split(',')
 
-    expect(result[0].genres).toContain(filteredGenres[0]);
+    expect(result[0].genres).toContain(genres[0]);
   });
 
   it('should filter movies by genres and duration if both genres and duration are specified', () => {
-    const genres = 'Action';
+    const genres = ['Action'] as Genres[];
     const duration = 120;
     const result = movieService.getMovies(genres, duration) as Movie[];
-    const filteredGenres = genres.trim().split(',')
 
-    expect(result[0].genres).toContain(filteredGenres[0]);
+    expect(result[0].genres).toContain(genres[0]);
     expect(parseInt(result[0].runtime)).toBeGreaterThanOrEqual(duration - 10);
     expect(parseInt(result[0].runtime)).toBeLessThanOrEqual(duration + 10);
   });

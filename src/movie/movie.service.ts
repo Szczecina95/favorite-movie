@@ -12,30 +12,31 @@ export class MovieService {
     }
 
     addMovieToDb(movie: CreateMovieDTO): void {
-        const { movies } = this.data
+        const { movies } = this.data;
         const id = this.getLastMovieId(movies) === undefined ? 1 : this.getLastMovieId(movies) + 1;
-        const movieToAdd = { id, ...movie }
-        movies.push(movieToAdd)
-
-        fs.writeFile(path.join(__dirname, '../db/db.json'), JSON.stringify(this.data), (err) => {
-        if (err != null) {
-            throw err
+        const movieToAdd = { id, ...movie };
+        movies.push(movieToAdd);
+      
+        try {
+          fs.writeFileSync(path.join(__dirname, '../db/db.json'), JSON.stringify(this.data));
+        } catch (err) {
+          console.error('Error during saving object to database', err);
+          throw err; 
+        }
       }
-    })}
 
-    getMovies(genres?: string, duration?: number): Movie | Movie[] {
+    getMovies(genres?: Genres[], duration?: number): Movie | Movie[] {
         const { movies } = this.data
-        const formatedGenres = <Genres[]>genres?.trim().split(',');
-
+    
         if(duration && !genres){
             return this.getRandomMovieByDuration(duration)
         }
         if(!duration && genres){ 
-            return this.filterAndSortMoviesByGenres(formatedGenres)
+            return this.filterAndSortMoviesByGenres(genres)
         }
 
         if (duration && genres) {
-            return this.filterMoviesByGenresAndDuration(formatedGenres, duration);
+            return this.filterMoviesByGenresAndDuration(genres, duration);
         }
 
         return movies[this.getRandomMovieIndex(movies)];
@@ -55,16 +56,22 @@ export class MovieService {
     }
 
     private filterAndSortMoviesByGenres(genres: Genres[]): Movie[] {
-        const { movies } = this.data
-        const filteredMovies = movies.filter(movie =>
-            genres.some(genre => movie.genres.includes(genre))
-        );
-
-        const sortedMovies = filteredMovies.sort((a, b) =>
-            genres.filter(genre => b.genres.includes(genre)).length -
-            genres.filter(genre => a.genres.includes(genre)).length
-        );
-        return sortedMovies
+        const { movies } = this.data;
+    
+        const sortedMovies = movies
+            .filter(movie => genres.some(genre => movie.genres.includes(genre)))
+            .sort((a, b) => {
+                const matchingGenresA = genres.filter(genre => a.genres.includes(genre)).length;
+                const matchingGenresB = genres.filter(genre => b.genres.includes(genre)).length;
+    
+                if (matchingGenresB !== matchingGenresA) {
+                    return matchingGenresB - matchingGenresA;
+                } else {
+                    return a.title.localeCompare(b.title);
+                }
+            });
+    
+        return sortedMovies;
     }
 
     private filterMoviesByGenresAndDuration(genres: Genres[], duration: number): Movie[] {
