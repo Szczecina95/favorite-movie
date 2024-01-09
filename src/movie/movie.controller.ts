@@ -5,8 +5,6 @@ import { Request, Response } from 'express';
 import { Genres } from "./movie.types";
 import moviesData from '../db/db.json'
 import { areGenresValid } from "./movie.helpers";
-import { error } from "console";
-
 
 const movieService = new MovieService();
 
@@ -25,7 +23,6 @@ export class MovieController {
 
             const errors = await validate(movie);
 
-            console.log(errors)
             if (errors.length) {
                 res.send(errors)
                 return;
@@ -34,7 +31,6 @@ export class MovieController {
             movieService.addMovieToDb(movie);
             res.status(201).json({ message: 'Movie added successfully' });
         } catch (error) {
-            console.error('Error adding movie:', error);
             res.status(400).json({ error: 'Bad request' });
         }
     }
